@@ -50,7 +50,15 @@ namespace doranekoWebAspCSharp.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            try
+            {
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+
         }
 
         [HttpPost]
@@ -58,6 +66,14 @@ namespace doranekoWebAspCSharp.Controllers
         {
             try
             {
+                Employee emp = new Employee();
+                emp.Name = collection["Name"];
+                DateTime jDate;
+                DateTime.TryParse(collection["DOB"], out jDate);
+                emp.JoiningDate = jDate;
+                string age = collection["Age"];
+                emp.Age = Int32.Parse(age);
+                empList.Add(emp);
                 return RedirectToAction("Index");
             }
             catch
