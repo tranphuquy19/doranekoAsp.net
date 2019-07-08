@@ -6,13 +6,15 @@ using System.Web.Mvc;
 
 namespace doranekoWebAspCSharp.Controllers
 {
+    [MyFilter]
     public class HomeController : Controller
     {
         //
         // GET: /home/
+        [OutputCache(Duration=15)]
         public string Index()
         {
-            return "abcxyz";
+            return DateTime.Now.ToString();
         }
 	}
 }
