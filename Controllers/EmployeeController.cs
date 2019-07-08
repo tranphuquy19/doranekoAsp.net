@@ -10,70 +10,27 @@ namespace doranekoWebAspCSharp.Controllers
     public class EmployeeController : Controller
     {
 
-        public static List<Employee> empList = new List<Employee>{
-   new Employee{
-      ID = 1,
-      Name = "Allan",
-      JoiningDate = DateTime.Parse(DateTime.Today.ToString()),
-      Age = 23
-   },
-	
-   new Employee{
-      ID = 2,
-      Name = "Carson",
-      JoiningDate = DateTime.Parse(DateTime.Today.ToString()),
-      Age = 45
-   },
-	
-   new Employee{
-      ID = 3,
-      Name = "Carson",
-      JoiningDate = DateTime.Parse(DateTime.Today.ToString()),
-      Age = 37
-   },
-	
-   new Employee{
-      ID = 4,
-      Name = "Laura",
-      JoiningDate = DateTime.Parse(DateTime.Today.ToString()),
-      Age = 26
-   },
-	
-};
+        private EmpDBContext db = new EmpDBContext();
 
 
         public ActionResult Index()
         {
-            var employees = from e in empList orderby e.ID select e;
+            var employees = from e in db.Employees orderby e.ID select e;
             return View(employees);
         }
 
         public ActionResult Create()
         {
-            try
-            {
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-
+            return View();
         }
 
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(Employee emp)
         {
             try
             {
-                Employee emp = new Employee();
-                emp.Name = collection["Name"];
-                DateTime jDate;
-                DateTime.TryParse(collection["DOB"], out jDate);
-                emp.JoiningDate = jDate;
-                string age = collection["Age"];
-                emp.Age = Int32.Parse(age);
-                empList.Add(emp);
+                db.Employees.Add(emp);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch
@@ -84,7 +41,8 @@ namespace doranekoWebAspCSharp.Controllers
 
         public ActionResult Edit(int id)
         {
-            return View();
+            var employee = db.Employees.Single(m => m.ID == id);
+            return View(employee);
         }
 
         [HttpPost]
@@ -92,12 +50,13 @@ namespace doranekoWebAspCSharp.Controllers
         {
             try
             {
-                var employee = empList.Single(m => m.ID == id);
+                var employee = db.Employees.Single(m => m.ID == id);
                 if (TryUpdateModel(employee))
                 {
+                    db.SaveChanges();
                     return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index");
+                return View(employee);
             }
             catch
             {
