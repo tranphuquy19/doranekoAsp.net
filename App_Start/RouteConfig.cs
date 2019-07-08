@@ -17,7 +17,7 @@ namespace doranekoWebAspCSharp
             "Employee", "Employee/{name}", new
             {
                 controller = "Employee",
-                action = "Search",
+                action = "Index",
                 name = UrlParameter.Optional
             });
 

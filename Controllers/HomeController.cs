@@ -12,9 +12,9 @@ namespace doranekoWebAspCSharp.Controllers
         //
         // GET: /home/
         [OutputCache(Duration=15)]
-        public string Index()
+        public ActionResult Index()
         {
-            return DateTime.Now.ToString();
+            return View();
         }
 	}
 }
